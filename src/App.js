@@ -9,17 +9,31 @@ function App() {
   const handleAdded = () => setRefreshKey((k) => k + 1);
 
   return (
-    <div className="App" style={{ padding: 24 }}>
-      <h1>Simple Events Client</h1>
-      <section style={{ marginBottom: 24 }}>
-        <h2>Add Event</h2>
-        <AddEventForm onAdded={handleAdded} />
-      </section>
+    <div className="App">
+      <div className="container py-4">
+        <div className="d-flex align-items-center justify-content-between mb-4">
+          <h1 className="h3 mb-0">Simple Events Client</h1>
+          <small className="text-muted">A lightweight event viewer</small>
+        </div>
 
-      <section>
-        <h2>Events</h2>
-        <EventList refreshKey={refreshKey} />
-      </section>
+        <div className="mb-4">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h2 className="h5">Add Event</h2>
+              <AddEventForm onAdded={handleAdded} />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h2 className="h5">Events</h2>
+              <EventList refreshKey={refreshKey} />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

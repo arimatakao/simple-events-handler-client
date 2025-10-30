@@ -44,38 +44,59 @@ export default function AddEventForm({ onAdded }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 16 }}>
-      <div>
-        <label>User ID</label>
-        <input
-          type="number"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-          required
-        />
+    <form onSubmit={handleSubmit} className="mb-3">
+      <div className="row g-2">
+        <div className="col-md-3">
+          <label className="form-label">User ID</label>
+          <input
+            type="number"
+            className="form-control"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            required
+            placeholder="42"
+          />
+        </div>
+        <div className="col-md-5">
+          <label className="form-label">Action</label>
+          <input
+            className="form-control"
+            value={action}
+            onChange={(e) => setAction(e.target.value)}
+            required
+            placeholder="e.g. click_button"
+          />
+        </div>
+        <div className="col-md-4">
+          <label className="form-label">Page (metadata.page)</label>
+          <input
+            className="form-control"
+            value={pagePath}
+            onChange={(e) => setPagePath(e.target.value)}
+            placeholder="/home"
+            required
+          />
+        </div>
       </div>
-      <div>
-        <label>Action</label>
-        <input
-          value={action}
-          onChange={(e) => setAction(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Page (metadata.page)</label>
-        <input
-          value={pagePath}
-          onChange={(e) => setPagePath(e.target.value)}
-          placeholder="/home"
-          required
-        />
-      </div>
+
       {error && (
-        <div style={{ color: 'red', marginTop: 8 }}>{error}</div>
+        <div className="alert alert-danger mt-3" role="alert">{error}</div>
       )}
-      <div style={{ marginTop: 8 }}>
-        <button type="submit" disabled={loading}>{loading ? 'Adding...' : 'Add Event'}</button>
+
+      <div className="mt-3 d-flex align-items-center">
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Adding...
+            </>
+          ) : (
+            'Add Event'
+          )}
+        </button>
+        <button type="button" className="btn btn-outline-secondary ms-2" onClick={() => { setUserId(''); setAction(''); setPagePath('/'); }} disabled={loading}>
+          Reset
+        </button>
       </div>
     </form>
   );

@@ -143,83 +143,101 @@ export default function EventList() {
 
   return (
     <div>
-      <div style={{ marginBottom: 12 }}>
-        <label style={{ display: 'block' }}>user_id</label>
-        <input value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="42" />
-        <label style={{ display: 'block', marginTop: 8 }}>from</label>
-        <input
-          type="datetime-local"
-          value={from}
-          onChange={(e) => setFrom(e.target.value)}
-        />
-        <label style={{ display: 'block', marginTop: 8 }}>to</label>
-        <input
-          type="datetime-local"
-          value={to}
-          onChange={(e) => setTo(e.target.value)}
-        />
-        <div style={{ marginTop: 8 }}>
-          <button type="button" onClick={() => {
-            // preset: last 1 hour
-            const now = new Date();
-            const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
-            setFrom(formatForDatetimeLocal(oneHourAgo, TZ));
-            setTo(formatForDatetimeLocal(now, TZ));
-          }}>Last 1 hour</button>
-          <button type="button" onClick={() => {
-            // preset: last 24 hours
-            const now = new Date();
-            const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-            setFrom(formatForDatetimeLocal(dayAgo, TZ));
-            setTo(formatForDatetimeLocal(now, TZ));
-          }} style={{ marginLeft: 8 }}>Last 24 hours</button>
-          <button type="button" onClick={() => {
-            // preset: today (start of day to now)
-            const now = new Date();
-            const start = new Date(now);
-            start.setHours(0,0,0,0);
-            setFrom(formatForDatetimeLocal(start, TZ));
-            setTo(formatForDatetimeLocal(now, TZ));
-          }} style={{ marginLeft: 8 }}>Today</button>
+      <div className="mb-3">
+        <div className="row g-2 align-items-end">
+          <div className="col-md-2">
+            <label className="form-label">user_id</label>
+            <input className="form-control" value={userId} onChange={(e) => setUserId(e.target.value)} placeholder="42" />
+          </div>
+          <div className="col-md-3">
+            <label className="form-label">from</label>
+            <input
+              type="datetime-local"
+              className="form-control"
+              value={from}
+              onChange={(e) => setFrom(e.target.value)}
+            />
+          </div>
+          <div className="col-md-3">
+            <label className="form-label">to</label>
+            <input
+              type="datetime-local"
+              className="form-control"
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+            />
+          </div>
+
+          <div className="col-md-4 text-md-end">
+            <div className="btn-group" role="group" aria-label="presets">
+              <button type="button" className="btn btn-outline-secondary" onClick={() => {
+                const now = new Date();
+                const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+                setFrom(formatForDatetimeLocal(oneHourAgo, TZ));
+                setTo(formatForDatetimeLocal(now, TZ));
+              }}>Last 1 hour</button>
+              <button type="button" className="btn btn-outline-secondary" onClick={() => {
+                const now = new Date();
+                const dayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+                setFrom(formatForDatetimeLocal(dayAgo, TZ));
+                setTo(formatForDatetimeLocal(now, TZ));
+              }}>Last 24 hours</button>
+              <button type="button" className="btn btn-outline-secondary" onClick={() => {
+                const now = new Date();
+                const start = new Date(now);
+                start.setHours(0,0,0,0);
+                setFrom(formatForDatetimeLocal(start, TZ));
+                setTo(formatForDatetimeLocal(now, TZ));
+              }}>Today</button>
+            </div>
+            <div className="mt-2 mt-md-0 d-inline-block ms-2">
+              <button className="btn btn-primary" onClick={fetchEvents} disabled={loading}>{loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Loading...
+                </>
+              ) : 'Get Events'}</button>
+            </div>
+          </div>
         </div>
-        <div style={{ marginTop: 8 }}>
-          <button onClick={fetchEvents} disabled={loading}>{loading ? 'Loading...' : 'Get Events'}</button>
-        </div>
-        {error && <div style={{ color: 'red', marginTop: 8 }}>{error}</div>}
+
+        {error && <div className="alert alert-danger mt-3">{error}</div>}
       </div>
 
       <div>
-        {loading && <div>Loading events...</div>}
-        {!loading && !events.length && <div>No events found</div>}
+        {loading && <div className="text-muted">Loading events...</div>}
+        {!loading && !events.length && <div className="text-muted">No events found</div>}
         {!loading && events.length > 0 && (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: 'left', borderBottom: '1px solid #ddd' }}>ID</th>
-                <th style={{ textAlign: 'left', borderBottom: '1px solid #ddd' }}>User</th>
-                <th style={{ textAlign: 'left', borderBottom: '1px solid #ddd' }}>Action</th>
-                <th style={{ textAlign: 'left', borderBottom: '1px solid #ddd' }}>Metadata</th>
-                <th style={{ textAlign: 'left', borderBottom: '1px solid #ddd' }}>Created</th>
-              </tr>
-            </thead>
-            <tbody>
-              {events.map((ev) => (
-                <tr key={ev.id}>
-                  <td style={{ padding: '8px 4px', borderBottom: '1px solid #eee' }}>{ev.id}</td>
-                  <td style={{ padding: '8px 4px', borderBottom: '1px solid #eee' }}>{ev.user_id}</td>
-                  <td style={{ padding: '8px 4px', borderBottom: '1px solid #eee' }}>{ev.action}</td>
-                  <td style={{ padding: '8px 4px', borderBottom: '1px solid #eee' }}>
-                    {ev.metadata_page ? (
-                      <a href={ev.metadata_page} target="_blank" rel="noopener noreferrer">view</a>
-                    ) : (
-                      <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{JSON.stringify(ev.metadata || {}, null, 2)}</pre>
-                    )}
-                  </td>
-                  <td style={{ padding: '8px 4px', borderBottom: '1px solid #eee' }}>{formatDate(ev.created_at)}</td>
+          <div className="table-responsive">
+            <table className="table table-hover table-sm align-middle">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>User</th>
+                  <th>Action</th>
+                  <th>Metadata</th>
+                  <th>Created</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {events.map((ev) => (
+                  <tr key={ev.id}>
+                    <td className="text-muted">{ev.id}</td>
+                    <td>{ev.user_id}</td>
+                    <td>{ev.action}</td>
+                    <td style={{ maxWidth: 340 }}>
+                      {ev.metadata_page ? (
+                        <a href={ev.metadata_page} target="_blank" rel="noopener noreferrer">view</a>
+                      ) : (
+                        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>{JSON.stringify(ev.metadata || {}, null, 2)}</pre>
+                      )}
+                    </td>
+                    <td className="text-muted">{formatDate(ev.created_at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>
