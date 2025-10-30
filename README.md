@@ -1,70 +1,110 @@
-# Getting Started with Create React App
+# Simple Events Handler — Client
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Application for backend - [https://github.com/arimatakao/simple-events-handler](https://github.com/arimatakao/simple-events-handler)
 
-## Available Scripts
+A small React single-page application for creating and listing events. This client is a lightweight frontend that communicates with an events API to add, fetch and display events.
 
-In the project directory, you can run:
+This repository was bootstrapped with Create React App and includes a minimal UI, an `AddEventForm` component to submit new events, an `EventList` to show events, and a small `services/events.js` helper for API calls.
 
-### `npm start`
+## Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Node.js (LTS recommended, e.g. 14/16/18/20)
+- npm (comes with Node) or yarn
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Quick start
 
-### `npm test`
+1. Install dependencies
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+npm install
+# or
+yarn
+```
 
-### `npm run build`
+2. Start the development server
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm start
+# or
+yarn start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Open http://localhost:3000 in your browser. The app will hot-reload when you edit source files.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Available scripts
 
-### `npm run eject`
+- npm start: run the app in development mode (dev server on :3000)
+- npm run build: create an optimized production build in the `build/` folder
+- npm test: run tests (if any)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Run them via npm or yarn as shown in the Quick start.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Environment / API base URL
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+The client calls an events backend. By default the code expects the API base to be configured in `src/api.js` or within `services/events.js` (check the `api.js` file in the `src/` folder). If you need to point the client to a different backend in development, set the appropriate environment variable or update the API base constant.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Example (using an .env file at project root):
 
-## Learn More
+```bash
+# .env
+REACT_APP_API_BASE=http://localhost:4000
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+After changing environment variables restart the dev server.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Project structure (key files)
 
-### Code Splitting
+- `src/` — React source files
+	- `index.js` — app entry
+	- `App.js` — main component
+	- `components/AddEventForm.js` — form to create events
+	- `components/EventList.js` — displays events
+	- `services/events.js` — API helper (fetch/post events)
+	- `api.js` — central API base constant
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- `public/` — static html and assets used by CRA
+- `build/` — production output (after `npm run build`)
 
-### Analyzing the Bundle Size
+## How the client communicates with the API
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+The app uses the `services/events.js` module to call the backend. Typical operations include:
 
-### Making a Progressive Web App
+- GET /events — fetch all events
+- POST /events — create a new event (JSON body)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+If your backend requires authentication or different routes, update `services/events.js` accordingly.
 
-### Advanced Configuration
+## Building for production
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+To create an optimized production build:
 
-### Deployment
+```bash
+npm run build
+# or
+yarn build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+The output will be in the `build/` directory, ready to be deployed to static hosting (Netlify, Vercel, S3, etc.).
 
-### `npm run build` fails to minify
+## Common troubleshooting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Dev server won't start:
+	- Make sure Node and npm are installed and versions are compatible.
+	- Delete `node_modules` and reinstall: `rm -rf node_modules && npm install`.
+
+- The app can't reach the API:
+	- Confirm `REACT_APP_API_BASE` / `src/api.js` is set to your backend URL.
+	- Check browser console / network tab for request URLs and errors.
+
+- CORS errors:
+	- Ensure the backend allows cross-origin requests from `http://localhost:3000` in development.
+
+## Tests
+
+There are no unit tests included by default beyond the CRA starter. If you add tests, run them with:
+
+```bash
+npm test
+# or
+yarn test
+```
