@@ -131,7 +131,7 @@ Deploy the contents of the `build/` directory to any static host (Netlify, Verce
 	docker run --rm --env-file ./.env.example -p 8082:80 simple-events-client:latest
 	```
 
-	Open http://localhost:8080 to view the app.
+	Open http://localhost:8082 to view the app.
 
 	Notes:
 	- The Dockerfile uses a Node build stage and a lightweight nginx runtime.
