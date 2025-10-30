@@ -1,23 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react';
+import AddEventForm from './components/AddEventForm';
+import EventList from './components/EventList';
 
 function App() {
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleAdded = () => setRefreshKey((k) => k + 1);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" style={{ padding: 24 }}>
+      <h1>Simple Events Client</h1>
+      <section style={{ marginBottom: 24 }}>
+        <h2>Add Event</h2>
+        <AddEventForm onAdded={handleAdded} />
+      </section>
+
+      <section>
+        <h2>Events</h2>
+        <EventList refreshKey={refreshKey} />
+      </section>
     </div>
   );
 }
